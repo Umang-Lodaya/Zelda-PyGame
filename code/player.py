@@ -6,6 +6,7 @@ class Player(pygame.sprite.Sprite):
         super().__init__(groups)
         self.image = pygame.image.load(r"graphics\test\player.png").convert_alpha()
         self.rect = self.image.get_rect(topleft = position)
+        self.hitbox = self.rect.inflate(0, -26)
 
         self.directions = pygame.math.Vector2()
         self.speed = 5
@@ -30,18 +31,19 @@ class Player(pygame.sprite.Sprite):
     def collision(self, direction):
         if direction == 'horizontal':
             for sprite in self.obstaclesGroups:
-                if sprite.rect.colliderect(self.rect):
+                # IF COLLIDED
+                if sprite.hitbox.colliderect(self.hitbox):
                     if self.directions.x > 0: # RIGHT
-                        self.rect.right = sprite.rect.left
+                        self.hitbox.right = sprite.hitbox.left
                     elif self.directions.x < 0: # LEFT
-                        self.rect.left = sprite.rect.right
+                        self.hitbox.left = sprite.hitbox.right
         else:
             for sprite in self.obstaclesGroups:
-                if sprite.rect.colliderect(self.rect):
+                if sprite.hitbox.colliderect(self.hitbox):
                     if self.directions.y > 0: # DOWN
-                        self.rect.bottom = sprite.rect.top
+                        self.hitbox.bottom = sprite.hitbox.top
                     elif self.directions.y < 0: # UP
-                        self.rect.top = sprite.rect.bottom
+                        self.hitbox.top = sprite.hitbox.bottom
 
     
     def move(self, speed):
@@ -49,10 +51,11 @@ class Player(pygame.sprite.Sprite):
         if self.directions.magnitude() != 0:
             self.directions = self.directions.normalize()
         
-        self.rect.x += self.directions.x * speed
+        self.hitbox.x += self.directions.x * speed
         self.collision('horizontal')
-        self.rect.y += self.directions.y * speed
+        self.hitbox.y += self.directions.y * speed
         self.collision('vertical')
+        self.rect.center = self.hitbox.center
 
     def update(self):
         self.input()
