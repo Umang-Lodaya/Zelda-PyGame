@@ -4,24 +4,33 @@ from os import walk
 from support import importFolder
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, position, groups, obstacleGroups):
+    def __init__(self, position, groups, obstacleGroups, createAttack, destoryAttack):
         super().__init__(groups)
         self.image = pygame.image.load(r"graphics\test\player.png").convert_alpha()
         self.rect = self.image.get_rect(topleft=position)
         self.hitbox = self.rect.inflate(0, -26)
         self.obstaclesGroups = obstacleGroups
+        self.createAttack = createAttack
+        self.destroyAttack = destoryAttack
 
         self.importPlayerAssets()
         self.STATUS = 'down'
 
-        self.directions = pygame.math.Vector2()
         self.speed = 5
         self.FRAME_INDEX = 0
         self.ANIMATION_SPEED = 0.15
 
+        self.directions = pygame.math.Vector2()
         self.ATTACKING = False
         self.ATTACK_COOLDOWN = 400
         self.ATTACK_TIME = None
+
+        self.WEAPON_INDEX = 0
+        self.WEAPON = list(WEAPONS_DATA.keys())[self.WEAPON_INDEX]
+        self.CAN_SWITCH_WEAPON = True
+        self.SWITCH_COOLDOWN = 400
+        self.WEAPON_SWITCH_TIME = None
+
     
     def getStatus(self):
         # IDLE
@@ -49,8 +58,6 @@ class Player(pygame.sprite.Sprite):
         self.image = animation[int(self.FRAME_INDEX)]
         self.rect = self.image.get_rect(center = self.hitbox.center)
 
-
-
     def importPlayerAssets(self):
         CHARACTER_PATH = r"graphics\player"
         self.ANIMATIONS = {
@@ -63,7 +70,6 @@ class Player(pygame.sprite.Sprite):
         for animation in self.ANIMATIONS:
             path = CHARACTER_PATH + '/' + animation
             self.ANIMATIONS[animation] = importFolder(path)
-
 
     def input(self):
         if not self.ATTACKING:
@@ -92,13 +98,21 @@ class Player(pygame.sprite.Sprite):
             if KEYS[pygame.K_SPACE]:
                 self.ATTACK_TIME = pygame.time.get_ticks()
                 self.ATTACKING = True
-                print("ATTACK")
+                self.createAttack()
             
             # MAGIC INPUT
             if KEYS[pygame.K_LCTRL]:
                 self.ATTACK_TIME = pygame.time.get_ticks()
                 self.ATTACKING = True
                 print("MAGIC")
+            
+            if KEYS[pygame.K_q] and self.CAN_SWITCH_WEAPON:
+                self.CAN_SWITCH_WEAPON = False
+                self.WEAPON_SWITCH_TIME = pygame.time.get_ticks()
+                self.WEAPON_INDEX += 1
+                self.WEAPON_INDEX %= len(WEAPONS_DATA)
+                self.WEAPON = list(WEAPONS_DATA.keys())[self.WEAPON_INDEX]
+
 
     def collision(self, direction):
         if direction == "horizontal":
@@ -132,6 +146,10 @@ class Player(pygame.sprite.Sprite):
         CURRENT_TIME = pygame.time.get_ticks()
         if self.ATTACKING and self.ATTACK_COOLDOWN <= (CURRENT_TIME - self.ATTACK_TIME):
             self.ATTACKING = False
+            self.destroyAttack()
+        
+        if not self.CAN_SWITCH_WEAPON and self.SWITCH_COOLDOWN <= (CURRENT_TIME - self.WEAPON_SWITCH_TIME):
+            self.CAN_SWITCH_WEAPON = True
 
     def update(self):
         self.input()
