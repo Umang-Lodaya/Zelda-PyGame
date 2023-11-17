@@ -60,13 +60,13 @@ class UI:
         return bgRect
     
     def weaponOverlay(self, weaponIndex, hasSwitched):
-        bgRect = self.selectionBox(10, self.DISPLAY_SURFACE.get_size()[1] - 10 - ITEM_BOX_SIZE, hasSwitched)
+        bgRect = self.selectionBox(10*2 + ITEM_BOX_SIZE, self.DISPLAY_SURFACE.get_size()[1] - 10 - ITEM_BOX_SIZE, hasSwitched)
         weaponSurf = self.WEAPON_GRAPHICS[weaponIndex]
         weaponRect = weaponSurf.get_rect(center = bgRect.center)
         self.DISPLAY_SURFACE.blit(weaponSurf, weaponRect)
 
     def magicOverlay(self, magicIndex, hasSwitched):
-        bgRect = self.selectionBox(10*2 + ITEM_BOX_SIZE, self.DISPLAY_SURFACE.get_size()[1] - 10 - ITEM_BOX_SIZE, hasSwitched)
+        bgRect = self.selectionBox(10, self.DISPLAY_SURFACE.get_size()[1] - 10 - ITEM_BOX_SIZE, hasSwitched)
         magicSurf = self.MAGIC_GRAPHICS[magicIndex]
         magicRect = magicSurf.get_rect(center = bgRect.center)
         self.DISPLAY_SURFACE.blit(magicSurf, magicRect)
@@ -76,5 +76,5 @@ class UI:
         self.showBar(player.HEALTH, player.STATS['health'], self.HEALTH_BAR_RECT, HEALTH_COLOR)
         self.showBar(player.ENERGY, player.STATS['energy'], self.ENERGY_BAR_RECT, ENERGY_COLOR)
         self.showEXP(player.EXP)
+        self.magicOverlay(player.MAGIC_INDEX, not player.CAN_SWITCH_MAGIC)
         self.weaponOverlay(player.WEAPON_INDEX, not player.CAN_SWITCH_WEAPON)
-        self.magicOverlay(player.MAGIC_INDEX, not player.CAN_SWITCH_MAGIC) 

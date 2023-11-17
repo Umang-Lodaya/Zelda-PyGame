@@ -92,19 +92,19 @@ class Player(pygame.sprite.Sprite):
             KEYS = pygame.key.get_pressed()
 
             # MOVEMENT INPUT
-            if KEYS[pygame.K_UP]:
+            if KEYS[pygame.K_UP] or KEYS[pygame.K_w]:
                 self.directions.y = -1
                 self.STATUS = 'up'
-            elif KEYS[pygame.K_DOWN]:
+            elif KEYS[pygame.K_DOWN] or KEYS[pygame.K_s]:
                 self.directions.y = 1
                 self.STATUS = 'down'
             else:
                 self.directions.y = 0
 
-            if KEYS[pygame.K_LEFT]:
+            if KEYS[pygame.K_LEFT] or KEYS[pygame.K_a]:
                 self.directions.x = -1
                 self.STATUS = 'left'
-            elif KEYS[pygame.K_RIGHT]:
+            elif KEYS[pygame.K_RIGHT] or KEYS[pygame.K_d]:
                 self.STATUS = 'right'
                 self.directions.x = 1
             else:
@@ -117,7 +117,7 @@ class Player(pygame.sprite.Sprite):
                 self.createAttack()
             
             # MAGIC INPUT
-            if KEYS[pygame.K_LCTRL]:
+            if KEYS[pygame.K_LSHIFT]:
                 self.ATTACK_TIME = pygame.time.get_ticks()
                 self.ATTACKING = True
                 style = self.MAGIC
@@ -125,14 +125,14 @@ class Player(pygame.sprite.Sprite):
                 cost = MAGIC_DATA[self.MAGIC]['cost']
                 self.createMagic(style, strength, cost)
             
-            if KEYS[pygame.K_q] and self.CAN_SWITCH_WEAPON:
+            if KEYS[pygame.K_e] and self.CAN_SWITCH_WEAPON:
                 self.CAN_SWITCH_WEAPON = False
                 self.WEAPON_SWITCH_TIME = pygame.time.get_ticks()
                 self.WEAPON_INDEX += 1
                 self.WEAPON_INDEX %= len(WEAPONS_DATA)
                 self.WEAPON = list(WEAPONS_DATA.keys())[self.WEAPON_INDEX]
             
-            if KEYS[pygame.K_e] and self.CAN_SWITCH_MAGIC:
+            if KEYS[pygame.K_q] and self.CAN_SWITCH_MAGIC:
                 self.CAN_SWITCH_MAGIC = False
                 self.MAGIC_SWITCH_TIME = pygame.time.get_ticks()
                 self.MAGIC_INDEX += 1
