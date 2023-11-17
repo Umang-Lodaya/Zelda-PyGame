@@ -42,13 +42,13 @@ class Level:
 
 
         self.PLAYER = Player(
-            (2000, 1430), [self.VISIBLE_SPRITES], self.OBSTACLE_SPRITES
+            (1950, 1280), [self.VISIBLE_SPRITES], self.OBSTACLE_SPRITES
         )
 
     def run(self):
         self.VISIBLE_SPRITES.customDraw(self.PLAYER)
         self.VISIBLE_SPRITES.update()
-
+        debug(self.PLAYER.STATUS)
 
 class YSortCameraGroup(pygame.sprite.Group):
     def __init__(self):

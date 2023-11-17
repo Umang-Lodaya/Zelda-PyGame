@@ -18,6 +18,7 @@ class Game:
             self.LEVEL.run()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
+                    print("QUITED!")
                     pygame.quit()
                     sys.exit()
 
@@ -26,5 +27,6 @@ class Game:
 
 
 if __name__ == "__main__":
+    print("LOADING GAME ...")
     game = Game()
     game.run()
