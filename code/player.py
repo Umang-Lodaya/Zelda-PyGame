@@ -12,24 +12,30 @@ class Player(pygame.sprite.Sprite):
         self.obstaclesGroups = obstacleGroups
         self.createAttack = createAttack
         self.destroyAttack = destoryAttack
-
         self.importPlayerAssets()
+        
+        # MOVEMENTS
         self.STATUS = 'down'
-
-        self.speed = 5
         self.FRAME_INDEX = 0
         self.ANIMATION_SPEED = 0.15
-
         self.directions = pygame.math.Vector2()
+        
+        # WEAPONS
         self.ATTACKING = False
         self.ATTACK_COOLDOWN = 400
         self.ATTACK_TIME = None
-
         self.WEAPON_INDEX = 0
         self.WEAPON = list(WEAPONS_DATA.keys())[self.WEAPON_INDEX]
         self.CAN_SWITCH_WEAPON = True
         self.SWITCH_COOLDOWN = 400
         self.WEAPON_SWITCH_TIME = None
+
+        # STATS
+        self.STATS = {'health': 100, 'energy': 60, 'attack': 10, 'magic': 4, 'speed': 6}
+        self.HEALTH = self.STATS['health']
+        self.ENERGY = self.STATS['energy']
+        self.EXP = 123
+        self.SPEED = self.STATS['speed']
 
     
     def getStatus(self):
@@ -113,7 +119,6 @@ class Player(pygame.sprite.Sprite):
                 self.WEAPON_INDEX %= len(WEAPONS_DATA)
                 self.WEAPON = list(WEAPONS_DATA.keys())[self.WEAPON_INDEX]
 
-
     def collision(self, direction):
         if direction == "horizontal":
             for sprite in self.obstaclesGroups:
@@ -156,4 +161,4 @@ class Player(pygame.sprite.Sprite):
         self.cooldowns()
         self.getStatus()
         self.animate()
-        self.move(self.speed)
+        self.move(self.SPEED)
