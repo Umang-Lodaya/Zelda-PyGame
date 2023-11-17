@@ -30,7 +30,7 @@ class Level:
             for i, row in enumerate(layout):
                 for j, col in enumerate(row):
                     if col != "-1":
-                        x, y = j * TILE_SIZE, i * TILE_SIZE
+                        x, y = j * TILE_SIZE, i * TILE_SIZE # POSITION ON SCREEN
                         if style == "boundary":
                             Tile((x, y), [self.OBSTACLE_SPRITES], "invisible")
                         if style == "grass":
@@ -77,5 +77,4 @@ class YSortCameraGroup(pygame.sprite.Group):
         for sprite in sorted(self.sprites(), key=lambda x: x.rect.centery):
             # THEN, ADD HALF-FRAME TO CENTER THE POS
             OFFSET_POS = sprite.rect.topleft - self.OFFSET
-
             self.DISPLAY_SURFACE.blit(sprite.image, OFFSET_POS)
