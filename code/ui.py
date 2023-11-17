@@ -30,7 +30,6 @@ class UI:
 
         # CONVERT AMOUNT -> PIXELS
         ratio = currentAmount / maxAmount
-        ratio = 0.8
         currentWidth = bgRect.width * ratio
         currentRect = bgRect.copy()
         currentRect.width = currentWidth

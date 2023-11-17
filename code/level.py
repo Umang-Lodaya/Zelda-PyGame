@@ -8,7 +8,7 @@ from player import Player
 from random import choice
 from weapon import Weapon
 from ui import UI
-
+from enemy import Enemy
 from debug import debug
 
 
@@ -28,13 +28,16 @@ class Level:
         layouts = {
             "boundary": importCSV(r"map\map_FloorBlocks.csv"),
             "grass": importCSV(r"map\map_Grass.csv"),
-            "object": importCSV(r"map\map_LargeObjects.csv")
+            "object": importCSV(r"map\map_LargeObjects.csv"),
+            "entities": importCSV(r"map\map_Entities.csv")
             }
         
         graphics = {
             'grass': importFolder(r"graphics\grass"),
             'objects': importFolder(r"graphics\objects")
+
         }
+
         
         for style, layout in layouts.items():
             for i, row in enumerate(layout):
@@ -49,12 +52,18 @@ class Level:
                         if style == "object":
                             surf = graphics["objects"][int(col)]
                             Tile((x, y), [self.VISIBLE_SPRITES, self.OBSTACLE_SPRITES], 'object', surf)
+                        if style == 'entities':
+                            if col == "394":
+                                self.PLAYER = Player(
+                                    (x, y), [self.VISIBLE_SPRITES], 
+                                    self.OBSTACLE_SPRITES, self.createAttack, self.destroyAttack, self.createMagic
+                                )
+                            else:
+                                monsters = {"390": "bamboo", "391": "spirit", "392": "raccoon"}
+                                name = monsters.get(col, "squid")
+                                Enemy(name, (x, y), [self.VISIBLE_SPRITES], self.OBSTACLE_SPRITES)
 
 
-        self.PLAYER = Player(
-            (1950, 1280), [self.VISIBLE_SPRITES], 
-            self.OBSTACLE_SPRITES, self.createAttack, self.destroyAttack, self.createMagic
-        )
 
     def createAttack(self):
         self.currentAttack = Weapon(self.PLAYER, [self.VISIBLE_SPRITES])
@@ -70,6 +79,7 @@ class Level:
     def run(self):
         self.VISIBLE_SPRITES.customDraw(self.PLAYER)
         self.VISIBLE_SPRITES.update()
+        self.VISIBLE_SPRITES.enemyUpdate(self.PLAYER)
         self.ui.display(self.PLAYER)
         # debug(self.PLAYER.STATUS)
 
@@ -101,3 +111,8 @@ class YSortCameraGroup(pygame.sprite.Group):
             # THEN, ADD HALF-FRAME TO CENTER THE POS
             OFFSET_POS = sprite.rect.topleft - self.OFFSET
             self.DISPLAY_SURFACE.blit(sprite.image, OFFSET_POS)
+    
+    def enemyUpdate(self, player):
+        enemySprites = [sprite for sprite in self.sprites() if hasattr(sprite, 'sprite_type') and sprite.sprite_type == 'enemy']
+        for enemy in enemySprites:
+            enemy.enemyUpdate(player)
