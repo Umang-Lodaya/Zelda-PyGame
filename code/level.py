@@ -52,7 +52,8 @@ class Level:
 
 
         self.PLAYER = Player(
-            (1950, 1280), [self.VISIBLE_SPRITES], self.OBSTACLE_SPRITES, self.createAttack, self.destroyAttack
+            (1950, 1280), [self.VISIBLE_SPRITES], 
+            self.OBSTACLE_SPRITES, self.createAttack, self.destroyAttack, self.createMagic
         )
 
     def createAttack(self):
@@ -62,6 +63,9 @@ class Level:
         if self.currentAttack:
             self.currentAttack.kill()
         self.currentAttack = None
+
+    def createMagic(self, style, strength, cost):
+        print(style, strength, cost)
 
     def run(self):
         self.VISIBLE_SPRITES.customDraw(self.PLAYER)
