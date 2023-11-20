@@ -3,9 +3,10 @@ import pygame
 from settings import *
 from support import *
 
+from particle import AnimationPlayer
 from tile import Tile
 from player import Player
-from random import choice
+from random import choice, randint
 from weapon import Weapon
 from ui import UI
 from enemy import Enemy
@@ -26,6 +27,9 @@ class Level:
 
         # UI
         self.ui = UI()
+
+        # PARTICLES
+        self.ANIMATION_PLAYER = AnimationPlayer()
 
     def createMap(self):
         layouts = {
@@ -68,9 +72,7 @@ class Level:
                                 name = monsters.get(col, "squid")
                                 Enemy(name, (x, y), 
                                         [self.VISIBLE_SPRITES, self.ATTACKABLE_SPRITE], 
-                                        self.OBSTACLE_SPRITES, self.damagePlayer)
-
-
+                                        self.OBSTACLE_SPRITES, self.damagePlayer, self.createDeathParticles)
 
     def createAttack(self):
         self.currentAttack = Weapon(self.PLAYER, [self.VISIBLE_SPRITES, self.ATTACK_SPRITE])
@@ -90,6 +92,10 @@ class Level:
                 if collisions:
                     for target in collisions:
                         if target.sprite_type == 'grass':
+                            pos = target.rect.center
+                            offset = pygame.math.Vector2(0, 75)
+                            for leaf in range(randint(3, 6)):
+                                self.ANIMATION_PLAYER.createGrassParticles(pos - offset, [self.VISIBLE_SPRITES])
                             target.kill()
                         else:
                             target.getDamage(self.PLAYER, attack.sprite_type)
@@ -99,6 +105,10 @@ class Level:
             self.PLAYER.HEALTH -= amount
             self.PLAYER.VULNARABLE = False
             self.PLAYER.HIT_TIME = pygame.time.get_ticks()
+            self.ANIMATION_PLAYER.createParticles(type, self.PLAYER.rect.center, [self.VISIBLE_SPRITES])
+    
+    def createDeathParticles(self, pos, type):
+        self.ANIMATION_PLAYER.createParticles(type, pos, [self.VISIBLE_SPRITES])
 
 
     def run(self):
