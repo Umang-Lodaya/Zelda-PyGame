@@ -19,6 +19,9 @@ class Level:
         self.OBSTACLE_SPRITES = pygame.sprite.Group()
 
         self.currentAttack = None
+        self.ATTACK_SPRITE = pygame.sprite.Group()
+        self.ATTACKABLE_SPRITE = pygame.sprite.Group()
+
         self.createMap()
 
         # UI
@@ -48,7 +51,9 @@ class Level:
                             Tile((x, y), [self.OBSTACLE_SPRITES], "invisible")
                         if style == "grass":
                             random_grass = choice(graphics["grass"])
-                            Tile((x, y), [self.VISIBLE_SPRITES, self.OBSTACLE_SPRITES], 'grass', random_grass)
+                            Tile((x, y), 
+                                    [self.VISIBLE_SPRITES, self.OBSTACLE_SPRITES, self.ATTACKABLE_SPRITE], 
+                                    'grass', random_grass)
                         if style == "object":
                             surf = graphics["objects"][int(col)]
                             Tile((x, y), [self.VISIBLE_SPRITES, self.OBSTACLE_SPRITES], 'object', surf)
@@ -61,12 +66,14 @@ class Level:
                             else:
                                 monsters = {"390": "bamboo", "391": "spirit", "392": "raccoon"}
                                 name = monsters.get(col, "squid")
-                                Enemy(name, (x, y), [self.VISIBLE_SPRITES], self.OBSTACLE_SPRITES)
+                                Enemy(name, (x, y), 
+                                        [self.VISIBLE_SPRITES, self.ATTACKABLE_SPRITE], 
+                                        self.OBSTACLE_SPRITES, self.damagePlayer)
 
 
 
     def createAttack(self):
-        self.currentAttack = Weapon(self.PLAYER, [self.VISIBLE_SPRITES])
+        self.currentAttack = Weapon(self.PLAYER, [self.VISIBLE_SPRITES, self.ATTACK_SPRITE])
     
     def destroyAttack(self):
         if self.currentAttack:
@@ -75,12 +82,31 @@ class Level:
 
     def createMagic(self, style, strength, cost):
         print(style, strength, cost)
+    
+    def playerAttackLogic(self):
+        if self.ATTACK_SPRITE:
+            for attack in self.ATTACK_SPRITE:
+                collisions = pygame.sprite.spritecollide(attack, self.ATTACKABLE_SPRITE, False)
+                if collisions:
+                    for target in collisions:
+                        if target.sprite_type == 'grass':
+                            target.kill()
+                        else:
+                            target.getDamage(self.PLAYER, attack.sprite_type)
+
+    def damagePlayer(self, amount, type):
+        if self.PLAYER.VULNARABLE:
+            self.PLAYER.HEALTH -= amount
+            self.PLAYER.VULNARABLE = False
+            self.PLAYER.HIT_TIME = pygame.time.get_ticks()
+
 
     def run(self):
         self.VISIBLE_SPRITES.customDraw(self.PLAYER)
         self.VISIBLE_SPRITES.update()
         self.VISIBLE_SPRITES.enemyUpdate(self.PLAYER)
         self.ui.display(self.PLAYER)
+        self.playerAttackLogic()
         # debug(self.PLAYER.STATUS)
 
 class YSortCameraGroup(pygame.sprite.Group):

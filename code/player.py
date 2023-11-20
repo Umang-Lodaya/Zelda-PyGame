@@ -45,6 +45,10 @@ class Player(Entity):
         self.EXP = 123
         self.SPEED = self.STATS['speed']
 
+        self.VULNARABLE = True
+        self.HIT_TIME = None
+        self.INVULNARABILITY_DURATION = 500
+
     
     def getStatus(self):
         # IDLE
@@ -71,6 +75,11 @@ class Player(Entity):
 
         self.image = animation[int(self.FRAME_INDEX)]
         self.rect = self.image.get_rect(center = self.hitbox.center)
+
+        if not self.VULNARABLE:
+            self.image.set_alpha(self.waveValue())
+        else:
+            self.image.set_alpha(255)
 
     def importPlayerAssets(self):
         CHARACTER_PATH = r"graphics\player"
@@ -114,6 +123,13 @@ class Player(Entity):
                 self.ATTACKING = True
                 self.createAttack()
             
+            if KEYS[pygame.K_e] and self.CAN_SWITCH_WEAPON:
+                self.CAN_SWITCH_WEAPON = False
+                self.WEAPON_SWITCH_TIME = pygame.time.get_ticks()
+                self.WEAPON_INDEX += 1
+                self.WEAPON_INDEX %= len(WEAPONS_DATA)
+                self.WEAPON = list(WEAPONS_DATA.keys())[self.WEAPON_INDEX]
+            
             # MAGIC INPUT
             if KEYS[pygame.K_LSHIFT]:
                 self.ATTACK_TIME = pygame.time.get_ticks()
@@ -122,13 +138,6 @@ class Player(Entity):
                 strength = MAGIC_DATA[self.MAGIC]['strength'] + self.STATS["magic"]
                 cost = MAGIC_DATA[self.MAGIC]['cost']
                 self.createMagic(style, strength, cost)
-            
-            if KEYS[pygame.K_e] and self.CAN_SWITCH_WEAPON:
-                self.CAN_SWITCH_WEAPON = False
-                self.WEAPON_SWITCH_TIME = pygame.time.get_ticks()
-                self.WEAPON_INDEX += 1
-                self.WEAPON_INDEX %= len(WEAPONS_DATA)
-                self.WEAPON = list(WEAPONS_DATA.keys())[self.WEAPON_INDEX]
             
             if KEYS[pygame.K_q] and self.CAN_SWITCH_MAGIC:
                 self.CAN_SWITCH_MAGIC = False
@@ -139,7 +148,7 @@ class Player(Entity):
 
     def cooldowns(self):
         CURRENT_TIME = pygame.time.get_ticks()
-        if self.ATTACKING and self.ATTACK_COOLDOWN <= (CURRENT_TIME - self.ATTACK_TIME):
+        if self.ATTACKING and (self.ATTACK_COOLDOWN + WEAPONS_DATA[self.WEAPON]["cooldown"]) <= (CURRENT_TIME - self.ATTACK_TIME):
             self.ATTACKING = False
             self.destroyAttack()
         
@@ -148,6 +157,14 @@ class Player(Entity):
         
         if not self.CAN_SWITCH_MAGIC and self.SWITCH_COOLDOWN <= (CURRENT_TIME - self.MAGIC_SWITCH_TIME):
             self.CAN_SWITCH_MAGIC = True
+        
+        if not self.VULNARABLE and self.INVULNARABILITY_DURATION <= (CURRENT_TIME - self.HIT_TIME):
+            self.VULNARABLE = True
+
+    def getWeaponDamage(self):
+        base = self.STATS["attack"]
+        weapon = WEAPONS_DATA[self.WEAPON]["damage"]
+        return base + weapon
 
     def update(self):
         self.input()
