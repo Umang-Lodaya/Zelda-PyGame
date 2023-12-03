@@ -36,7 +36,6 @@ class Upgrade:
                 self.CAN_MOVE = False
                 self.SELECTION_TIME = pygame.time.get_ticks()
                 self.ITEMS[self.SELECTION_INDEX].trigger(self.PLAYER)
-                print(self.SELECTION_INDEX)
     
     def selectionCooldown(self):
         if not self.CAN_MOVE:

@@ -6,13 +6,17 @@ class Game:
     def __init__(self):
         pygame.init()
         pygame.display.set_caption("Zelda")
+
         self.SCREEN = pygame.display.set_mode((WIDTH, HEIGHT))
         self.CLOCK = pygame.time.Clock()
         self.LEVEL = Level()
+        MAIN_SOUND = pygame.mixer.Sound(r"audio\main.ogg")
+        MAIN_SOUND.sound(0.5)
+        MAIN_SOUND.play(loops = -1)
 
     def run(self):
         while True:
-            self.SCREEN.fill("black")
+            self.SCREEN.fill(WATER_COLOR)
             self.LEVEL.run()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:

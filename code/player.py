@@ -9,7 +9,7 @@ class Player(Entity):
         super().__init__(groups)
         self.image = pygame.image.load(r"graphics\test\player.png").convert_alpha()
         self.rect = self.image.get_rect(topleft=position)
-        self.hitbox = self.rect.inflate(0, -26)
+        self.hitbox = self.rect.inflate(-6, HITBOX_OFFSET['player'])
         self.obstaclesGroups = obstacleGroups
         self.createAttack = createAttack
         self.destroyAttack = destoryAttack
@@ -51,6 +51,8 @@ class Player(Entity):
         self.HIT_TIME = None
         self.INVULNARABILITY_DURATION = 500
 
+        self.WEAPON_ATTACK_SOUND = pygame.mixer.Sound(r"audio\sword.wav")
+        self.WEAPON_ATTACK_SOUND.set_volume(0.4)
     
     def getStatus(self):
         # IDLE
@@ -124,6 +126,7 @@ class Player(Entity):
                 self.ATTACK_TIME = pygame.time.get_ticks()
                 self.ATTACKING = True
                 self.createAttack()
+                self.WEAPON_ATTACK_SOUND.play()
             
             if KEYS[pygame.K_e] and self.CAN_SWITCH_WEAPON:
                 self.CAN_SWITCH_WEAPON = False

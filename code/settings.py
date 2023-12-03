@@ -2,6 +2,12 @@
 WIDTH, HEIGHT = 1280, 720
 FPS = 60
 TILE_SIZE = 64
+HITBOX_OFFSET = {
+    'player': -26,
+    'object': -40,
+    'grass': -10,
+    'invisible': 0
+}
 
 # UI
 BAR_HEIGHT = 20
@@ -84,7 +90,7 @@ ENEMY_DATA = {
         "exp": 250,
         "damage": 40,
         "attack_type": "claw",
-        "attack_sound": r"\audio\attack\claw.wav",
+        "attack_sound": r"audio\attack\claw.wav",
         "speed": 2,
         "resistance": 3,
         "attack_radius": 120,
