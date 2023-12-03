@@ -39,12 +39,12 @@ class Player(Entity):
 
 
         # STATS
-        self.STATS = {'health': 100, 'energy': 60, 'attack': 10, 'magic': 4, 'speed': 6}
-        self.MAX_STATS = {'health': 300, 'energy': 140, 'attack': 20, 'magic': 10, 'speed': 10}
-        self.UPGRADE_COST = {'health': 100, 'energy': 100, 'attack': 100, 'magic': 100, 'speed': 100}
+        self.EXP = 100
+        self.STATS = INITIAL_STATS
+        self.MAX_STATS = MAX_STATS
+        self.UPGRADE_COST = UPGRADE_COST
         self.HEALTH = self.STATS['health']
         self.ENERGY = self.STATS['energy']
-        self.EXP = 500
         self.SPEED = self.STATS['speed']
 
         self.VULNARABLE = True

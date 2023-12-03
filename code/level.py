@@ -1,5 +1,7 @@
 import pygame
 
+from random import choice, randint
+
 from settings import *
 from support import *
 
@@ -8,7 +10,6 @@ from upgrade import Upgrade
 from magic import MagicPlayer
 from tile import Tile
 from player import Player
-from random import choice, randint
 from weapon import Weapon
 from ui import UI
 from enemy import Enemy
@@ -21,6 +22,7 @@ class Level:
         self.VISIBLE_SPRITES = YSortCameraGroup()
         self.OBSTACLE_SPRITES = pygame.sprite.Group()
         self.GAME_PAUSED = False
+        self.GAMEOVER = False
 
         self.currentAttack = None
         self.ATTACK_SPRITE = pygame.sprite.Group()
@@ -49,7 +51,6 @@ class Level:
             'objects': importFolder(r"graphics\objects")
 
         }
-
         
         for style, layout in layouts.items():
             for i, row in enumerate(layout):
@@ -111,6 +112,8 @@ class Level:
     def damagePlayer(self, amount, type):
         if self.PLAYER.VULNARABLE:
             self.PLAYER.HEALTH -= amount
+            if self.PLAYER.HEALTH <= 0:
+                self.GAMEOVER = True
             self.PLAYER.VULNARABLE = False
             self.PLAYER.HIT_TIME = pygame.time.get_ticks()
             self.ANIMATION_PLAYER.createParticles(type, self.PLAYER.rect.center, [self.VISIBLE_SPRITES])
@@ -123,6 +126,13 @@ class Level:
     
     
     def run(self):
+        if self.GAMEOVER:
+            self.PLAYER.kill()
+            for sprite in self.VISIBLE_SPRITES:
+                sprite.kill()
+            self.createMap()
+            self.GAMEOVER = False
+
         self.VISIBLE_SPRITES.customDraw(self.PLAYER)
         self.ui.display(self.PLAYER)
 

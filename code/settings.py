@@ -34,6 +34,10 @@ BAR_COLOR = "#EEEEEE"
 BAR_COLOR_SELECTED = "#111111"
 UPGRADE_BG_COLOR_SELECTED = "#EEEEEE"
 
+INITIAL_STATS = {'health': 100, 'energy': 60, 'attack': 10, 'magic': 4, 'speed': 6}
+MAX_STATS = {'health': 300, 'energy': 140, 'attack': 20, 'magic': 10, 'speed': 10}
+UPGRADE_COST = {'health': 100, 'energy': 100, 'attack': 100, 'magic': 100, 'speed': 100}
+
 WEAPONS_DATA = {
     "sword": {
         "cooldown": 100,
