@@ -4,7 +4,7 @@ import pygame
 from support import *
 
 class Enemy(Entity):
-    def __init__(self, monsterName, position, groups, obstaclesGroups, damagePlayer, createDeathParticles):
+    def __init__(self, monsterName, position, groups, obstaclesGroups, damagePlayer, createDeathParticles, addEXP):
         super().__init__(groups)
         self.sprite_type = 'enemy'
 
@@ -16,6 +16,7 @@ class Enemy(Entity):
         self.hitbox = self.rect.inflate(0, -10)
         self.obstaclesGroups = obstaclesGroups
         self.createDeathParticles = createDeathParticles
+        self.addEXP = addEXP
 
         # stats
         self.MONSTER_NAME = monsterName
@@ -123,7 +124,7 @@ class Enemy(Entity):
                 self.HEALTH -= player.getWeaponDamage()
             else:
                 self.HEALTH -= player.getMagicDamage()
-                
+
             self.HIT_TIME = pygame.time.get_ticks()
             self.VULNARABLE = False
     
@@ -135,6 +136,7 @@ class Enemy(Entity):
         if self.HEALTH <= 0:
             self.kill()
             self.createDeathParticles(self.rect.center, self.MONSTER_NAME)
+            self.addEXP(self.EXP)
 
     def enemyUpdate(self, player):
         self.actions(player)

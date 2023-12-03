@@ -4,6 +4,7 @@ from settings import *
 from support import *
 
 from particle import AnimationPlayer
+from upgrade import Upgrade
 from magic import MagicPlayer
 from tile import Tile
 from player import Player
@@ -19,6 +20,7 @@ class Level:
         self.DISPLAY_SURFACE = pygame.display.get_surface()
         self.VISIBLE_SPRITES = YSortCameraGroup()
         self.OBSTACLE_SPRITES = pygame.sprite.Group()
+        self.GAME_PAUSED = False
 
         self.currentAttack = None
         self.ATTACK_SPRITE = pygame.sprite.Group()
@@ -32,6 +34,7 @@ class Level:
         # PARTICLES
         self.ANIMATION_PLAYER = AnimationPlayer()
         self.MAGIC_PLAYER = MagicPlayer(self.ANIMATION_PLAYER)
+        self.UPGRADE = Upgrade(self.PLAYER)
 
     def createMap(self):
         layouts = {
@@ -74,7 +77,7 @@ class Level:
                                 name = monsters.get(col, "squid")
                                 Enemy(name, (x, y), 
                                         [self.VISIBLE_SPRITES, self.ATTACKABLE_SPRITE], 
-                                        self.OBSTACLE_SPRITES, self.damagePlayer, self.createDeathParticles)
+                                        self.OBSTACLE_SPRITES, self.damagePlayer, self.createDeathParticles, self.addEXP)
 
     def createAttack(self):
         self.currentAttack = Weapon(self.PLAYER, [self.VISIBLE_SPRITES, self.ATTACK_SPRITE])
@@ -115,18 +118,24 @@ class Level:
     def createDeathParticles(self, pos, type):
         self.ANIMATION_PLAYER.createParticles(type, pos, [self.VISIBLE_SPRITES])
     
-    def energyRecovery(self):
-        self.PLAYER.ENERGY += 0.01 * self.PLAYER.STATS['magic']
-        self.PLAYER.ENERGY = min(self.PLAYER.ENERGY, self.PLAYER.STATS['energy'])
-
+    def addEXP(self, amount):
+        self.PLAYER.EXP += amount
+    
+    
     def run(self):
         self.VISIBLE_SPRITES.customDraw(self.PLAYER)
-        self.VISIBLE_SPRITES.update()
-        self.VISIBLE_SPRITES.enemyUpdate(self.PLAYER)
         self.ui.display(self.PLAYER)
-        self.playerAttackLogic()
-        self.energyRecovery()
-        # debug(self.PLAYER.STATUS)
+
+        if self.GAME_PAUSED:
+            self.UPGRADE.display()
+        else:
+            self.VISIBLE_SPRITES.update()
+            self.VISIBLE_SPRITES.enemyUpdate(self.PLAYER)
+            self.playerAttackLogic()
+    
+    def toggleMenu(self):
+        self.GAME_PAUSED = not self.GAME_PAUSED
+
 
 class YSortCameraGroup(pygame.sprite.Group):
     def __init__(self):

@@ -19,6 +19,9 @@ class Game:
                     print("QUITED!")
                     pygame.quit()
                     sys.exit()
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_m:
+                        self.LEVEL.toggleMenu()
 
             pygame.display.update()
             self.CLOCK.tick(FPS)
