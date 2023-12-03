@@ -55,6 +55,7 @@ class Particle(pygame.sprite.Sprite):
     def __init__(self, position, animation_frames, groups):
         super().__init__(groups)
         self.FRAME_INDEX = 0
+        self.sprite_type = 'magic'
         self.ANIMATION_SPEED = 0.15
 
         self.frames = animation_frames

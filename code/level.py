@@ -4,6 +4,7 @@ from settings import *
 from support import *
 
 from particle import AnimationPlayer
+from magic import MagicPlayer
 from tile import Tile
 from player import Player
 from random import choice, randint
@@ -30,6 +31,7 @@ class Level:
 
         # PARTICLES
         self.ANIMATION_PLAYER = AnimationPlayer()
+        self.MAGIC_PLAYER = MagicPlayer(self.ANIMATION_PLAYER)
 
     def createMap(self):
         layouts = {
@@ -83,7 +85,10 @@ class Level:
         self.currentAttack = None
 
     def createMagic(self, style, strength, cost):
-        print(style, strength, cost)
+        if style == 'heal':
+            self.MAGIC_PLAYER.heal(self.PLAYER, strength, cost, [self.VISIBLE_SPRITES])
+        elif style == 'flame':
+            self.MAGIC_PLAYER.flame(self.PLAYER, cost, [self.VISIBLE_SPRITES, self.ATTACK_SPRITE])
     
     def playerAttackLogic(self):
         if self.ATTACK_SPRITE:
@@ -109,7 +114,10 @@ class Level:
     
     def createDeathParticles(self, pos, type):
         self.ANIMATION_PLAYER.createParticles(type, pos, [self.VISIBLE_SPRITES])
-
+    
+    def energyRecovery(self):
+        self.PLAYER.ENERGY += 0.01 * self.PLAYER.STATS['magic']
+        self.PLAYER.ENERGY = min(self.PLAYER.ENERGY, self.PLAYER.STATS['energy'])
 
     def run(self):
         self.VISIBLE_SPRITES.customDraw(self.PLAYER)
@@ -117,6 +125,7 @@ class Level:
         self.VISIBLE_SPRITES.enemyUpdate(self.PLAYER)
         self.ui.display(self.PLAYER)
         self.playerAttackLogic()
+        self.energyRecovery()
         # debug(self.PLAYER.STATUS)
 
 class YSortCameraGroup(pygame.sprite.Group):

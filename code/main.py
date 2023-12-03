@@ -2,14 +2,12 @@ import pygame, sys
 from settings import *
 from level import Level
 
-
 class Game:
     def __init__(self):
         pygame.init()
         pygame.display.set_caption("Zelda")
         self.SCREEN = pygame.display.set_mode((WIDTH, HEIGHT))
         self.CLOCK = pygame.time.Clock()
-
         self.LEVEL = Level()
 
     def run(self):

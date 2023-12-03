@@ -166,6 +166,11 @@ class Player(Entity):
         weapon = WEAPONS_DATA[self.WEAPON]["damage"]
         return base + weapon
 
+    def getMagicDamage(self):
+        base = self.STATS["magic"]
+        magic = MAGIC_DATA[self.MAGIC]["strength"]
+        return base + magic
+
     def update(self):
         self.input()
         self.cooldowns()
