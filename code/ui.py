@@ -39,7 +39,7 @@ class UI:
         pygame.draw.rect(self.DISPLAY_SURFACE, UI_BORDER_COLOR, bgRect, 3)
     
     def showEXP(self, exp):
-        text = self.FONT.render(str(int(exp)), False, TEXT_COLOR)
+        text = self.FONT.render(f"EXP: {int(exp)}", False, TEXT_COLOR)
         padding = 20
         x = self.DISPLAY_SURFACE.get_size()[0] - padding
         y = self.DISPLAY_SURFACE.get_size()[1] - padding

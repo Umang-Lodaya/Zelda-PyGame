@@ -1,5 +1,7 @@
+import sys
 import pygame
 
+import time
 from random import choice, randint
 
 from settings import *
@@ -124,15 +126,10 @@ class Level:
     def addEXP(self, amount):
         self.PLAYER.EXP += amount
     
-    
     def run(self):
         if self.GAMEOVER:
-            self.PLAYER.kill()
-            for sprite in self.VISIBLE_SPRITES:
-                sprite.kill()
-            self.createMap()
-            self.GAMEOVER = False
-
+            sys.exit()
+        
         self.VISIBLE_SPRITES.customDraw(self.PLAYER)
         self.ui.display(self.PLAYER)
 
@@ -145,7 +142,6 @@ class Level:
     
     def toggleMenu(self):
         self.GAME_PAUSED = not self.GAME_PAUSED
-
 
 class YSortCameraGroup(pygame.sprite.Group):
     def __init__(self):

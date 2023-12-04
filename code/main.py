@@ -24,7 +24,7 @@ class Game:
                     pygame.quit()
                     sys.exit()
                 if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_m:
+                    if event.key == pygame.K_TAB:
                         self.LEVEL.toggleMenu()
 
             pygame.display.update()
@@ -32,7 +32,5 @@ class Game:
 
 
 if __name__ == "__main__":
-    print("LOADING GAME ...")
     game = Game()
-    print("GAME LOADED!")
     game.run()

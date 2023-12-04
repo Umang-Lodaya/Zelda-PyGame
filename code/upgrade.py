@@ -23,11 +23,11 @@ class Upgrade:
         keys = pygame.key.get_pressed()
 
         if self.CAN_MOVE:
-            if keys[pygame.K_RIGHT] and self.SELECTION_INDEX < self.ATTRIBUTE_NUMBER - 1:
+            if (keys[pygame.K_RIGHT] or keys[pygame.K_d]) and self.SELECTION_INDEX < self.ATTRIBUTE_NUMBER - 1:
                 self.SELECTION_INDEX += 1
                 self.CAN_MOVE = False
                 self.SELECTION_TIME = pygame.time.get_ticks()
-            elif keys[pygame.K_LEFT] and self.SELECTION_INDEX >= 1:
+            elif (keys[pygame.K_LEFT] or keys[pygame.K_a]) and self.SELECTION_INDEX >= 1:
                 self.SELECTION_INDEX -= 1
                 self.CAN_MOVE = False
                 self.SELECTION_TIME = pygame.time.get_ticks()
@@ -76,7 +76,7 @@ class Item:
         titleSurf = self.font.render(name, False, color)
         titleRect = titleSurf.get_rect(midtop = self.rect.midtop + pygame.math.Vector2(0, 20))
 
-        costSurf = self.font.render(f"{int(cost)}", False, color)
+        costSurf = self.font.render(f"COST: {int(cost)}", False, color)
         costRect = costSurf.get_rect(midbottom = self.rect.midbottom - pygame.math.Vector2(0, 20))
         
         surface.blit(titleSurf, titleRect)
@@ -88,8 +88,8 @@ class Item:
         color = BAR_COLOR_SELECTED if selected else BAR_COLOR
 
         fullHeight = bottom[1] - top[1]
-        relativeNumber = value / maxVal * fullHeight
-        valueRect = pygame.Rect(top[0] - 15, bottom[1] - relativeNumber, 30, 10)
+        relativeNumber = int(value / maxVal * fullHeight)
+        valueRect = pygame.Rect(top[0] - 15, bottom[1] - relativeNumber, 30, relativeNumber + 15)
 
         pygame.draw.line(surface, color, top, bottom, 5)
         pygame.draw.rect(surface, color, valueRect)
