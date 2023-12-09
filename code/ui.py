@@ -48,6 +48,16 @@ class UI:
         pygame.draw.rect(self.DISPLAY_SURFACE, UI_BORDER_COLOR, text_rect, 3)
         self.DISPLAY_SURFACE.blit(text, text_rect)
 
+    def showControls(self):
+        FONT = pygame.font.Font(UI_FONT, 12)
+        text = FONT.render(f"W/A/S/D: MOVE | SPACE: ATTACK | L-SHIFT: SPELL | Q/E: CHANGE SPELL/ATTACK | TAB: MENU", False, TEXT_COLOR)
+        x = self.DISPLAY_SURFACE.get_size()[0] // 2 - 400
+        y = self.DISPLAY_SURFACE.get_size()[1] - 20
+        text_rect = text.get_rect(bottomleft = (x, y))
+        pygame.draw.rect(self.DISPLAY_SURFACE, UI_BG_COLOR, text_rect.inflate(20, 20))
+        pygame.draw.rect(self.DISPLAY_SURFACE, UI_BORDER_COLOR, text_rect, 3)
+        self.DISPLAY_SURFACE.blit(text, text_rect)
+
     def selectionBox(self, left, top, hasSwitched):
         bgRect = pygame.Rect(left, top, ITEM_BOX_SIZE, ITEM_BOX_SIZE)
         pygame.draw.rect(self.DISPLAY_SURFACE, UI_BG_COLOR, bgRect)
@@ -72,6 +82,7 @@ class UI:
 
 
     def display(self, player):
+        self.showControls()
         self.showBar(player.HEALTH, player.STATS['health'], self.HEALTH_BAR_RECT, HEALTH_COLOR)
         self.showBar(player.ENERGY, player.STATS['energy'], self.ENERGY_BAR_RECT, ENERGY_COLOR)
         self.showEXP(player.EXP)
