@@ -33,7 +33,7 @@ Clone the repository:
 
 Navigate to the project directory:
 
-- Copy code `cd main`
+- Copy code `cd code`
 
 <hr>
 Getting Started
