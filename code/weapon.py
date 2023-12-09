@@ -7,7 +7,7 @@ class Weapon(pygame.sprite.Sprite):
         self.sprite_type = 'weapon'
 
         # GRAPHIC
-        path = f"graphics/weapons/{player.WEAPON}/{direction}.png"
+        path = f"../graphics/weapons/{player.WEAPON}/{direction}.png"
         self.image = pygame.image.load(path).convert_alpha()
 
         # PLACEMENT

@@ -10,7 +10,7 @@ class Game:
         self.SCREEN = pygame.display.set_mode((WIDTH, HEIGHT))
         self.CLOCK = pygame.time.Clock()
         self.LEVEL = Level()
-        MAIN_SOUND = pygame.mixer.Sound(r"audio\main.ogg")
+        MAIN_SOUND = pygame.mixer.Sound("../audio/main.ogg")
         MAIN_SOUND.set_volume(0.5)
         MAIN_SOUND.play(loops = -1)
 

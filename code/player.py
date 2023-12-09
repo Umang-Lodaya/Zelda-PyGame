@@ -7,7 +7,7 @@ from entity import Entity
 class Player(Entity):
     def __init__(self, position, groups, obstacleGroups, createAttack, destoryAttack, createMagic):
         super().__init__(groups)
-        self.image = pygame.image.load(r"graphics\test\player.png").convert_alpha()
+        self.image = pygame.image.load("../graphics/test/player.png").convert_alpha()
         self.rect = self.image.get_rect(topleft=position)
         self.hitbox = self.rect.inflate(-6, HITBOX_OFFSET['player'])
         self.obstaclesGroups = obstacleGroups
@@ -51,7 +51,7 @@ class Player(Entity):
         self.HIT_TIME = None
         self.INVULNARABILITY_DURATION = 500
 
-        self.WEAPON_ATTACK_SOUND = pygame.mixer.Sound(r"audio\sword.wav")
+        self.WEAPON_ATTACK_SOUND = pygame.mixer.Sound("../audio/sword.wav")
         self.WEAPON_ATTACK_SOUND.set_volume(0.4)
     
     def getStatus(self):
@@ -86,7 +86,7 @@ class Player(Entity):
             self.image.set_alpha(255)
 
     def importPlayerAssets(self):
-        CHARACTER_PATH = r"graphics\player"
+        CHARACTER_PATH = "../graphics/player"
         self.ANIMATIONS = {
             'down':[], 'down_attack': [], 'down_idle': [],
             'left':[], 'left_attack': [], 'left_idle': [],
